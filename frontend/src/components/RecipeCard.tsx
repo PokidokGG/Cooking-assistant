@@ -18,11 +18,19 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
                                                }) => {
   const formattedDate = new Date(creationDate).toLocaleDateString("uk-UA");
 
+<<<<<<< HEAD
   // Time formatting function
   const formatCookingTime = (timeInMinutes: number) => {
     const hours = Math.floor(timeInMinutes / 60);
     const minutes = timeInMinutes % 60;
     return `${hours} hr : ${minutes.toString().padStart(2, "0")} min`; // Format as hr:min
+=======
+  // Function to format cooking time
+  const formatCookingTime = (timeInMinutes: number) => {
+    const hours = Math.floor(timeInMinutes / 60);
+    const minutes = timeInMinutes % 60;
+    return `${hours} hr : ${minutes.toString().padStart(2, "0")} min`; // Format as hh : mm
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
   };
 
   return (
@@ -47,7 +55,11 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 
         <Link to={`/recipe/${id}`}>
           <button className="mt-4 w-full bg-dark-purple font-montserratRegular text-white py-2 px-4 rounded-full">
+<<<<<<< HEAD
             Learn more
+=======
+            View details
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
           </button>
         </Link>
       </div>

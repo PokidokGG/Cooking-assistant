@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 
+<<<<<<< HEAD
+=======
+// Interface for DateFilterDropdown props
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
 interface DateFilterDropdownProps {
   startDate: string;
   endDate: string;
@@ -17,6 +21,10 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
   const [dateError, setDateError] = useState<string | null>(null);
   const filterRef = useRef<HTMLDivElement>(null);
 
+<<<<<<< HEAD
+=======
+  // Close dropdown on outside click
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -31,6 +39,7 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+<<<<<<< HEAD
   // Validate dates
   const validateDates = (start: string, end: string) => {
     console.log("Validating dates", { start, end });
@@ -43,19 +52,39 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
     }
 
     // Check if selected dates are not in the future
+=======
+  // Validate date inputs
+  const validateDates = (start: string, end: string) => {
+    console.log("Validating dates", { start, end });
+    setDateError(null); // Reset error message before validation
+
+    if (start && end && new Date(start) > new Date(end)) {
+      setDateError("Start date cannot be after end date.");
+      return;
+    }
+
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
     const today = new Date();
     if ((start && new Date(start) > today) || (end && new Date(end) > today)) {
       setDateError("Please select a valid date range.");
     }
   };
 
+<<<<<<< HEAD
   // Handle start date change
+=======
+  // Handle change in start date
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartDate(e.target.value);
     validateDates(e.target.value, endDate);
   };
 
+<<<<<<< HEAD
   // Handle end date change
+=======
+  // Handle change in end date
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
   const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEndDate(e.target.value);
     validateDates(startDate, e.target.value);
@@ -72,7 +101,11 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
   const resetFilters = () => {
     setStartDate("");
     setEndDate("");
+<<<<<<< HEAD
     setDateError(null); // Clear error message when resetting filters
+=======
+    setDateError(null); // Clear error on reset
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
     setIsOpen(false);
   };
 
@@ -82,13 +115,21 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
             onClick={() => setIsOpen(!isOpen)}
             className="bg-purple-600 text-white p-2 rounded-lg"
         >
+<<<<<<< HEAD
           Sort by dates
+=======
+          Filter by Date
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
         </button>
         {isOpen && (
             <div className="absolute bg-white border rounded-lg p-4 mt-2 shadow-lg w-64 z-10">
               <div className="mb-4">
                 <label htmlFor="startDate" className="block text-gray-700">
+<<<<<<< HEAD
                   Start date:
+=======
+                  Start Date:
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
                 </label>
                 <input
                     type="date"
@@ -100,7 +141,11 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
               </div>
               <div className="mb-4">
                 <label htmlFor="endDate" className="block text-gray-700">
+<<<<<<< HEAD
                   End date:
+=======
+                  End Date:
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
                 </label>
                 <input
                     type="date"
@@ -118,7 +163,11 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                   onClick={resetFilters}
                   className="text-purple-600 hover:underline w-full"
               >
+<<<<<<< HEAD
                 Reset filters
+=======
+                Reset Filters
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
               </button>
             </div>
         )}
@@ -126,4 +175,8 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
   );
 };
 
+<<<<<<< HEAD
 export default DateFilterDropdown;
+=======
+export default DateFilterDropdown;
+>>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
