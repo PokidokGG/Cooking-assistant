@@ -9,11 +9,7 @@ interface RecipeType {
 
 interface RecipeTypeFilterProps {
   selectedTypes: number[]; // Array of selected recipe type IDs
-<<<<<<< HEAD
   onChange: (selectedTypes: number[]) => void; // Function to handle type selection changes
-=======
-  onChange: (selectedTypes: number[]) => void; // Handler for type selection changes
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
 }
 
 const RecipeTypeFilter: React.FC<RecipeTypeFilterProps> = ({
@@ -21,7 +17,6 @@ const RecipeTypeFilter: React.FC<RecipeTypeFilterProps> = ({
                                                              onChange,
                                                            }) => {
   const [types, setTypes] = useState<RecipeType[]>([]); // State to store recipe types
-<<<<<<< HEAD
   const [isOpen, setIsOpen] = useState(false); // State for opening/closing the filter dropdown
   const filterRef = useRef<HTMLDivElement>(null); // Create ref for the component
 
@@ -42,21 +37,6 @@ const RecipeTypeFilter: React.FC<RecipeTypeFilterProps> = ({
         setTypes(response.data); // Update state with recipe types
       } catch (error) {
         // Error handling
-=======
-  const [isOpen, setIsOpen] = useState(false); // Dropdown open/close state
-  const filterRef = useRef<HTMLDivElement>(null); // Ref for detecting outside clicks
-
-  //? Fetch recipe types from database
-  useEffect(() => {
-    const fetchTypes = async () => {
-      try {
-        const response = await axios.get(
-            "http://localhost:8080/api/recipe-types"
-        );
-        setTypes(response.data); // Update state with fetched types
-      } catch (error) {
-        // Handle error while fetching data
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
         console.error("Error fetching recipe types:", error);
       }
     };
@@ -64,11 +44,7 @@ const RecipeTypeFilter: React.FC<RecipeTypeFilterProps> = ({
     fetchTypes();
   }, []);
 
-<<<<<<< HEAD
   //? Handle type selection change
-=======
-  //? Handle checkbox state change
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
   const handleCheckboxChange = (id: number) => {
     let updatedSelectedTypes;
     if (selectedTypes.includes(id)) {
@@ -76,28 +52,17 @@ const RecipeTypeFilter: React.FC<RecipeTypeFilterProps> = ({
     } else {
       updatedSelectedTypes = [...selectedTypes, id]; // Add selected type
     }
-<<<<<<< HEAD
     onChange(updatedSelectedTypes); // Pass updated list of selected types
   };
 
   //? Close filter when clicking outside of it
-=======
-    onChange(updatedSelectedTypes); // Notify parent with updated selection
-  };
-
-  //? Close dropdown when clicking outside
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
           filterRef.current &&
           !filterRef.current.contains(event.target as Node)
       ) {
-<<<<<<< HEAD
         setIsOpen(false); // Close the filter if clicking outside
-=======
-        setIsOpen(false); // Close filter dropdown
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
       }
     };
 
@@ -110,24 +75,15 @@ const RecipeTypeFilter: React.FC<RecipeTypeFilterProps> = ({
 
   //? Reset filters
   const resetFilters = () => {
-<<<<<<< HEAD
     onChange([]); // Reset selected types
     setIsOpen(false); // Close the dropdown
-=======
-    onChange([]); // Clear selected types
-    setIsOpen(false); // Close dropdown
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
   };
 
   return (
       <div ref={filterRef} className="relative">
         <button
             className="bg-purple-600 text-white p-2 rounded-lg"
-<<<<<<< HEAD
             onClick={() => setIsOpen(!isOpen)} // Toggle filter open/close state
-=======
-            onClick={() => setIsOpen(!isOpen)} // Toggle dropdown
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
         >
           Filter
         </button>
@@ -147,11 +103,7 @@ const RecipeTypeFilter: React.FC<RecipeTypeFilterProps> = ({
                   onClick={resetFilters}
                   className="mt-2 text-purple-600 hover:underline"
               >
-<<<<<<< HEAD
                 Reset filters
-=======
-                Reset Filters
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
               </button>
             </div>
         )}
@@ -159,8 +111,4 @@ const RecipeTypeFilter: React.FC<RecipeTypeFilterProps> = ({
   );
 };
 
-<<<<<<< HEAD
 export default RecipeTypeFilter;
-=======
-export default RecipeTypeFilter;
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d

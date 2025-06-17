@@ -1,5 +1,4 @@
 const db = require("../db");
-<<<<<<< HEAD
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -26,26 +25,11 @@ class UserController {
 
 
       res.status(201).json(newUser.rows[0]);
-=======
-
-class UserController {
-  //? Create a new user
-  async createUser(req, res) {
-    const { name, surname } = req.body;
-
-    try {
-      const newUser = await db.query(
-          `INSERT INTO person (name, surname) VALUES ($1, $2) RETURNING *`,
-          [name, surname]
-      );
-      res.json(newUser.rows[0]);
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }
 
-<<<<<<< HEAD
   //? login existing user
   async loginUser(req, res) {
     const { login, password } = req.body;
@@ -74,9 +58,6 @@ class UserController {
   }
 
   //? get all users
-=======
-  //? Get all users
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
   async getUsers(req, res) {
     try {
       const users = await db.query(`SELECT * FROM person`);
@@ -87,8 +68,4 @@ class UserController {
   }
 }
 
-<<<<<<< HEAD
 module.exports = new UserController();
-=======
-module.exports = new UserController();
->>>>>>> a339a7f23914a4812898e51b9deb03f82ba9737d
