@@ -1,43 +1,7 @@
 const db = require("../db");
 
 class RecipeController {
-  //? Створення рецепта
-  // async createRecipe(req, res) {
-  //   const {
-  //     title,
-  //     content,
-  //     person_id,
-  //     ingredients,
-  //     type_id,
-  //     cooking_time,
-  //     servings,
-  //   } = req.body;
-
-  //   try {
-  //     // Створюємо рецепт
-  //     const newRecipe = await db.query(
-  //       `INSERT INTO recipes (title, content, person_id, type_id, cooking_time, servings)
-  //        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-  //       [title, content, person_id, type_id, cooking_time, servings]
-  //     );
-
-  //     const recipeId = newRecipe.rows[0].id;
-
-  //     // Додаємо інгредієнти з кількістю
-  //     for (let { id, quantity } of ingredients) {
-  //       await db.query(
-  //         `INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity_recipe_ingredients)
-  //            VALUES ($1, $2, $3)`,
-  //         [recipeId, id, quantity || 1]
-  //       );
-  //     }
-
-  //     res.json(newRecipe.rows[0]);
-  //   } catch (error) {
-  //     console.error("Помилка при створенні рецепта:", error);
-  //     res.status(500).json({ error: error.message });
-  //   }
-  // }
+  //? Create recipe
   async createRecipe(req, res) {
     const {
       title,
@@ -50,23 +14,21 @@ class RecipeController {
     } = req.body;
 
     try {
-      // Перевірка на наявність ingredients
+      // Check for ingredients presence
       if (!Array.isArray(ingredients) || ingredients.length === 0) {
-        return res
-          .status(400)
-          .json({ error: "Інгредієнти не можуть бути порожніми" });
+        return res.status(400).json({ error: "Ingredients cannot be empty" });
       }
 
-      // Перевірка, що всі інгредієнти мають id
+      // Check that all ingredients have id
       for (let ingredient of ingredients) {
         if (!ingredient.id) {
           return res
             .status(400)
-            .json({ error: "Усі інгредієнти повинні мати id" });
+            .json({ error: "All ingredients must have id" });
         }
       }
 
-      // Створюємо рецепт
+      // Create recipe
       const newRecipe = await db.query(
         `INSERT INTO recipes (title, content, person_id, type_id, cooking_time, servings)
          VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
@@ -75,7 +37,7 @@ class RecipeController {
 
       const recipeId = newRecipe.rows[0].id;
 
-      // Додаємо інгредієнти з кількістю
+      // Add ingredients with quantity
       for (let { id, quantity } of ingredients) {
         await db.query(
           `INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity_recipe_ingredients)
@@ -86,12 +48,12 @@ class RecipeController {
 
       res.json(newRecipe.rows[0]);
     } catch (error) {
-      console.error("Помилка при створенні рецепта:", error);
+      console.error("Error creating recipe:", error);
       res.status(500).json({ error: error.message });
     }
   }
 
-  //? Отримання всіх рецептів
+  //? Get all recipes
   async getAllRecipes(req, res) {
     try {
       const recipes = await db.query(
@@ -109,7 +71,7 @@ class RecipeController {
     }
   }
 
-  //? Отримання рецепта за ID
+  //? Get recipe by ID
   async getRecipeWithIngredients(req, res) {
     const recipeId = req.params.id;
 
@@ -136,65 +98,17 @@ class RecipeController {
       );
 
       if (recipe.rows.length === 0) {
-        return res.status(404).json({ error: "Рецепт не знайдено" });
+        return res.status(404).json({ error: "Recipe not found" });
       }
 
       res.json(recipe.rows[0]);
     } catch (error) {
-      console.error("Помилка при отриманні рецепта:", error);
+      console.error("Error getting recipe:", error);
       res.status(500).json({ error: error.message });
     }
   }
 
-  //? Оновлення рецепта за ID
-  // async updateRecipe(req, res) {
-  //   const recipeId = req.params.id;
-  //   const {
-  //     title,
-  //     content,
-  //     ingredients: newIngredients,
-  //     type_id,
-  //     cooking_time,
-  //     servings,
-  //   } = req.body;
-
-  //   try {
-  //     if (!title || !content) {
-  //       return res
-  //         .status(400)
-  //         .json({ error: "Назва та зміст не можуть бути пустими" });
-  //     }
-
-  //     const result = await db.query(
-  //       `UPDATE recipes SET title = $1, content = $2, type_id = $3, cooking_time = $4, servings = $5
-  //        WHERE id = $6 RETURNING *`,
-  //       [title, content, type_id, cooking_time, servings, recipeId]
-  //     );
-
-  //     if (result.rowCount === 0) {
-  //       return res.status(404).json({ error: "Рецепт не знайдено" });
-  //     }
-
-  //     // Видаляємо старі інгредієнти
-  //     await db.query(`DELETE FROM recipe_ingredients WHERE recipe_id = $1`, [
-  //       recipeId,
-  //     ]);
-
-  //     // Додаємо нові інгредієнти з кількістю
-  //     for (let { id, quantity_recipe_ingredients } of newIngredients) {
-  //       await db.query(
-  //         `INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity_recipe_ingredients)
-  //            VALUES ($1, $2, $3)`,
-  //         [recipeId, id, quantity_recipe_ingredients || 1]
-  //       );
-  //     }
-
-  //     res.json(result.rows[0]);
-  //   } catch (error) {
-  //     console.error("Помилка при оновленні рецепта:", error);
-  //     res.status(500).json({ error: error.message });
-  //   }
-  // }
+  //? Update recipe by ID
   async updateRecipe(req, res) {
     const recipeId = req.params.id;
     const {
@@ -210,22 +124,20 @@ class RecipeController {
       if (!title || !content) {
         return res
           .status(400)
-          .json({ error: "Назва та зміст не можуть бути пустими" });
+          .json({ error: "Title and content cannot be empty" });
       }
 
-      // Перевірка на наявність ingredients
+      // Check for ingredients presence
       if (!Array.isArray(newIngredients) || newIngredients.length === 0) {
-        return res
-          .status(400)
-          .json({ error: "Інгредієнти не можуть бути порожніми" });
+        return res.status(400).json({ error: "Ingredients cannot be empty" });
       }
 
-      // Перевірка, що всі інгредієнти мають id
+      // Check that all ingredients have id
       for (let ingredient of newIngredients) {
         if (!ingredient.id) {
           return res
             .status(400)
-            .json({ error: "Усі інгредієнти повинні мати id" });
+            .json({ error: "All ingredients must have id" });
         }
       }
 
@@ -236,15 +148,15 @@ class RecipeController {
       );
 
       if (result.rowCount === 0) {
-        return res.status(404).json({ error: "Рецепт не знайдено" });
+        return res.status(404).json({ error: "Recipe not found" });
       }
 
-      // Видаляємо старі інгредієнти
+      // Delete old ingredients
       await db.query(`DELETE FROM recipe_ingredients WHERE recipe_id = $1`, [
         recipeId,
       ]);
 
-      // Додаємо нові інгредієнти з кількістю
+      // Add new ingredients with quantity
       for (let { id, quantity_recipe_ingredients } of newIngredients) {
         await db.query(
           `INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity_recipe_ingredients)
@@ -255,11 +167,11 @@ class RecipeController {
 
       res.json(result.rows[0]);
     } catch (error) {
-      console.error("Помилка при оновленні рецепта:", error);
+      console.error("Error updating recipe:", error);
       res.status(500).json({ error: error.message });
     }
   }
-  //? Фільтрація рецептів за інгредієнтами, типами, датами та часом приготування
+  //? Filter recipes by ingredients, types, dates and cooking time
   async searchRecipes(req, res) {
     const {
       ingredient_name,
@@ -313,14 +225,14 @@ class RecipeController {
         paramIndex++;
       }
 
-      // Додаємо фільтрацію за мінімальним часом приготування
+      // Add minimum cooking time filter
       if (min_cooking_time) {
         baseQuery += ` AND r.cooking_time >= $${paramIndex}`;
         params.push(Number(min_cooking_time));
         paramIndex++;
       }
 
-      // Додаємо фільтрацію за максимальним часом приготування
+      // Add maximum cooking time filter
       if (max_cooking_time) {
         baseQuery += ` AND r.cooking_time <= $${paramIndex}`;
         params.push(Number(max_cooking_time));
@@ -338,12 +250,12 @@ class RecipeController {
       const recipes = await db.query(baseQuery, params);
       res.json(recipes.rows);
     } catch (error) {
-      console.error("Помилка при пошуку рецептів:", error);
+      console.error("Error searching recipes:", error);
       res.status(500).json({ error: error.message });
     }
   }
 
-  //? Фільтрація рецептів за інгредієнтами, типами, датами, часом приготування та person_id
+  //? Filter recipes by ingredients, types, dates, cooking time and person_id
   async searchPersonRecipes(req, res) {
     const {
       ingredient_name,
@@ -423,66 +335,44 @@ class RecipeController {
 
       res.json(recipes.rows);
     } catch (error) {
-      console.error("Ошибка при поиске рецептов:", error);
+      console.error("Error searching recipes:", error);
       res.status(500).json({ error: error.message });
     }
   }
 
-  //? Видалення рецепта за ID
-  // async deleteRecipe(req, res) {
-  //   const recipeId = req.params.id;
-
-  //   try {
-  //     await db.query(`DELETE FROM recipe_ingredients WHERE recipe_id = $1`, [
-  //       recipeId,
-  //     ]);
-
-  //     const result = await db.query(
-  //       `DELETE FROM recipes WHERE id = $1 RETURNING *`,
-  //       [recipeId]
-  //     );
-
-  //     if (result.rowCount === 0) {
-  //       return res.status(404).json({ error: "Рецепт не знайдено" });
-  //     }
-
-  //     res.json({ message: "Рецепт успішно видалено" });
-  //   } catch (error) {
-  //     res.status(500).json({ error: error.message });
-  //   }
-  // }
+  //? Delete recipe by ID
   async deleteRecipe(req, res) {
     const recipeId = req.params.id;
 
     try {
-      // Удаляем все связи с меню
+      // Delete all menu relations
       await db.query(`DELETE FROM menu_recipe WHERE recipe_id = $1`, [
         recipeId,
       ]);
 
-      // Удаляем все инградиенты, связанные с рецептом
+      // Delete all ingredients related to the recipe
       await db.query(`DELETE FROM recipe_ingredients WHERE recipe_id = $1`, [
         recipeId,
       ]);
 
-      // Удаляем сам рецепт
+      // Delete the recipe itself
       const result = await db.query(
         `DELETE FROM recipes WHERE id = $1 RETURNING *`,
         [recipeId]
       );
 
       if (result.rowCount === 0) {
-        return res.status(404).json({ error: "Рецепт не знайдено" });
+        return res.status(404).json({ error: "Recipe not found" });
       }
 
-      res.json({ message: "Рецепт успішно видалено" });
+      res.json({ message: "Recipe successfully deleted" });
     } catch (error) {
-      console.error("Помилка при видаленні рецепта:", error);
+      console.error("Error deleting recipe:", error);
       res.status(500).json({ error: error.message });
     }
   }
 
-  //? Отримання всіх інгредієнтів
+  //? Get all ingredients
   async getAllIngredients(req, res) {
     try {
       const ingredients = await db.query(
@@ -492,12 +382,12 @@ class RecipeController {
       );
       res.json(ingredients.rows);
     } catch (error) {
-      console.error("Помилка при отриманні інгредієнтів:", error);
+      console.error("Error getting ingredients:", error);
       res.status(500).json({ error: error.message });
     }
   }
 
-  //? Отримання найшвидшого та найдовшого рецепту, а також статистики за типами
+  //? Get fastest and slowest recipe, as well as statistics by types
   async getRecipesStats(req, res) {
     try {
       const { rows: fastestRecipe } = await db.query(
@@ -530,7 +420,7 @@ class RecipeController {
       );
 
       const { rows: recipesWithMostIngredients } = await db.query(
-          `SELECT r.*, COUNT(ri.ingredient_id) as ingredient_count
+        `SELECT r.*, COUNT(ri.ingredient_id) as ingredient_count
            FROM recipes r
                   JOIN recipe_ingredients ri ON r.id = ri.recipe_id
            GROUP BY r.id
@@ -546,7 +436,7 @@ class RecipeController {
       );
 
       const { rows: recipesWithLeastIngredients } = await db.query(
-          `SELECT r.*, COUNT(ri.ingredient_id) as ingredient_count
+        `SELECT r.*, COUNT(ri.ingredient_id) as ingredient_count
            FROM recipes r
                   JOIN recipe_ingredients ri ON r.id = ri.recipe_id
            GROUP BY r.id
@@ -562,7 +452,7 @@ class RecipeController {
       );
 
       const { rows: averageCookingTimes } = await db.query(
-          `SELECT rt.type_name as "typeName", 
+        `SELECT rt.type_name as "typeName", 
               AVG(r.cooking_time) as "averageCookingTime"
          FROM recipes r
          JOIN recipe_types rt ON r.type_id = rt.id
@@ -575,7 +465,7 @@ class RecipeController {
         typeStats,
         recipesWithMostIngredients,
         recipesWithLeastIngredients,
-        averageCookingTimes
+        averageCookingTimes,
       });
     } catch (error) {
       res.status(500).json({ error: error.message });
